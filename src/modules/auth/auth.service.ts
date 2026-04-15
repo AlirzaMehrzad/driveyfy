@@ -94,8 +94,9 @@ export class AuthService {
         adminAccessLevel: admin.adminAccessLevel,
       });
       return {
-        admin,
         jwtToken,
+        admin,
+
       };
     }
     // ==> End admin login

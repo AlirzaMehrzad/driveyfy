@@ -34,4 +34,9 @@ export class CreateProductDto {
   @IsOptional()
   @IsArray()
   readonly images: string[];
+
+  @IsNumber()
+  @IsNotEmpty()
+  @Min(0, { message: 'موجودی محصول نمیتواند منفی باشد' })
+  readonly stock: number;
 }

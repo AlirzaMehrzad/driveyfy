@@ -4,11 +4,14 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Admin, AdminDocument } from './schema/admin.schema';
 import { Model } from 'mongoose';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AdminService {
   constructor(
     @InjectModel(Admin.name) private adminModel: Model<AdminDocument>,
+    private readonly jwtService: JwtService,
+
   ) { }
 
 
@@ -28,9 +31,9 @@ export class AdminService {
     return `This action removes a #${id} admin`;
   }
 
-  checkAdminAccessLevel = async (token) => {
-    const admin = await this.findOne(token);
-
+  getAdminAccessLevel = async (req: any) => {
+    const { adminAccessLevel } = req.user;
+    return adminAccessLevel;
   }
 
 
