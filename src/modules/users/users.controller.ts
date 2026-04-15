@@ -20,7 +20,7 @@ import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Get()
   @UseGuards(JwtAuthGuard)
@@ -29,7 +29,7 @@ export class UsersController {
     const users = await this.usersService.findAllUsers();
     return {
       status: 200,
-      message: 'مخاطبین پیدا شد',
+      message: 'Contacts found',
       data: users,
     };
   }

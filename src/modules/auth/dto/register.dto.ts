@@ -5,6 +5,8 @@ import {
   IsString,
   IsStrongPassword,
   MaxLength,
+  IsBoolean,
+  IsArray
 } from 'class-validator';
 
 export class RegisterDto {
@@ -32,4 +34,13 @@ export class RegisterDto {
   @IsOptional()
   @IsString()
   phone: string;
+
+  // For Admin
+  @IsOptional()
+  @IsBoolean()
+  isUser: boolean;
+
+  @IsOptional()
+  @IsArray()
+  adminAccessLevel: string[];
 }

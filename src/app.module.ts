@@ -9,6 +9,7 @@ import { CommentsModule } from './modules/comments/comments.module';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './common/filters/all_exception.filter';
 import { BullModule } from '@nestjs/bull';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { BullModule } from '@nestjs/bull';
     OrderingModule,
     CommentsModule,
     AuthModule,
+    AdminModule,
     MongooseModule.forRoot(
       'mongodb://admin:admin123@localhost:27017/driveyfy?authSource=admin',
     ),

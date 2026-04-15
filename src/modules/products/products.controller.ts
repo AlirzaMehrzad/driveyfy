@@ -21,10 +21,10 @@ import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
   @Post()
-  @UseGuards(JwtAuthGuard) // Ensure that the user is authenticated
+  @UseGuards(JwtAuthGuard) // Ensure that the user is authenticated 
   async create(@Req() req, @Body() createProductDto: CreateProductDto) {
     const product = await this.productsService.createProduct(
       req,
@@ -32,7 +32,7 @@ export class ProductsController {
     );
     return {
       success: true,
-      message: 'محصول ایجاد شد',
+      message: 'Product created successfully',
       data: product,
     };
   }
@@ -43,7 +43,7 @@ export class ProductsController {
     const products = await this.productsService.findAllProducts(query);
     return {
       status: 200,
-      message: 'لیست محصولات دریافت شد',
+      message: 'Products list received successfully',
       data: products,
     };
   }
@@ -53,12 +53,12 @@ export class ProductsController {
   async findOne(@Param('id', ParseMongoIdPipe) id: string) {
     const product = await this.productsService.findProductById(id);
     if (!product) {
-      throw new BadRequestException('محصول مورد نظر یافت نشد');
+      throw new BadRequestException('Product not found');
     }
 
     return {
       status: 200,
-      message: 'محصول با موفقیت دریافت شد',
+      message: 'Product received successfully',
       data: product,
     };
   }

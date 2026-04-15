@@ -46,6 +46,9 @@ export class Users {
 
   @Prop()
   activationExpires?: Date;
+
+  @Prop({ default: true })
+  isUser: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(Users);

@@ -13,25 +13,26 @@ import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('/register')
   async register(@Body() registerDto: RegisterDto) {
     const user = await this.authService.register(registerDto);
     return {
       success: true,
-      message: 'ثبت نام باموفقیت انجام شد',
+      message: 'Registration was successful',
       user,
     };
   }
 
   @Post('/login')
   async login(@Body() loginDto: LoginDto) {
-    const { user, jwtToken } = await this.authService.login(loginDto);
+    const { user, admin, jwtToken } = await this.authService.login(loginDto);
     return {
       success: true,
-      message: 'لاگین موفق',
+      message: 'Login was successful',
       user,
+      admin,
       jwtToken,
     };
   }
@@ -39,6 +40,6 @@ export class AuthController {
   @Get('activate/:token')
   async activate(@Param('token') token: string) {
     await this.authService.userAccountActivation(token);
-    return { success: true, message: 'اکانت شما فعال شد' };
+    return { success: true, message: 'Account was activated successfully' };
   }
 }

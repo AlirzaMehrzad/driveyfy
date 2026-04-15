@@ -23,7 +23,7 @@ export class UsersService {
     @InjectModel(Users.name) private userModel: Model<UserDocument>,
     @Inject(forwardRef(() => ProductsService))
     private readonly productsService: ProductsService,
-  ) {}
+  ) { }
 
   createUser = async (createUserDto: CreateUserDto) => {
     const newUser = await this.userModel.create(createUserDto);
@@ -47,11 +47,11 @@ export class UsersService {
   };
 
   findAllUsers = async () => {
-    return await this.userModel.find().select('-password');
+    return await this.userModel.find().select('-password -activationToken -activationExpires -isUser');
   };
 
   findOneUserById = async (id: Types.ObjectId) => {
-    const user = await this.userModel.findById(id).select('-password');
+    const user = await this.userModel.findById(id).select('-password -activationToken -activationExpires -isUser');
     if (!user) return { status: 400, message: 'مخاطب وجود ندارد' };
     return {
       status: 200,
