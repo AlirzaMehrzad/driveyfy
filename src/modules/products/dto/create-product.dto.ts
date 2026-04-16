@@ -29,7 +29,7 @@ export class CreateProductDto {
   @MinLength(10)
   @MaxLength(250)
   @IsNotEmpty()
-  readonly description: string;
+  description: string;
 
   @IsOptional()
   @IsArray()

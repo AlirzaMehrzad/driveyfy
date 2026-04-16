@@ -6,9 +6,11 @@ import { Products, ProductSchema } from './schema/product.schema';
 import { Users, UserSchema } from 'src/modules/users/schema/user.schema';
 import { UsersService } from 'src/modules/users/users.service';
 import { UsersModule } from 'src/modules/users/users.module';
+import { AiModule } from 'src/ai/ai.module';
 
 @Module({
   imports: [
+    AiModule,
     MongooseModule.forFeature([{ name: Products.name, schema: ProductSchema }]),
     forwardRef(() => UsersModule),
   ],
@@ -16,4 +18,4 @@ import { UsersModule } from 'src/modules/users/users.module';
   providers: [ProductsService],
   exports: [ProductsService],
 })
-export class ProductsModule {}
+export class ProductsModule { }

@@ -10,6 +10,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './common/filters/all_exception.filter';
 import { BullModule } from '@nestjs/bull';
 import { AdminModule } from './modules/admin/admin.module';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AdminModule } from './modules/admin/admin.module';
         port: 6379,
       },
     }),
+    AiModule,
   ],
   providers: [
     {

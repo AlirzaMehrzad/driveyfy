@@ -5,16 +5,24 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ProductDocument, Products } from './schema/product.schema';
 import { Model, Types } from 'mongoose';
 import { UsersService } from 'src/modules/users/users.service';
+import { AiService } from 'src/ai/ai.service';
+import { productsDescriptionPrompt } from 'src/ai/constants/prompt';
 
 @Injectable()
 export class ProductsService {
   constructor(
+    private readonly aiService: AiService,
     @InjectModel(Products.name) private productModel: Model<ProductDocument>,
     @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
-  ) {}
+  ) { }
 
   createProduct = async (req, createProductDto: CreateProductDto) => {
+    const prompt = await productsDescriptionPrompt(createProductDto.title);
+    const aiGeneratedDescription = await this.aiService.generateWithOllama(prompt);
+    console.log(aiGeneratedDescription);
+
+    createProductDto.description = aiGeneratedDescription;
     const userId = new Types.ObjectId(req.user.id);
     const product = await this.productModel.create({
       ...createProductDto,
