@@ -10,7 +10,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './common/filters/all_exception.filter';
 import { BullModule } from '@nestjs/bull';
 import { AdminModule } from './modules/admin/admin.module';
-import { AiModule } from './ai/ai.module';
+import { AiModule } from './modules/ai/ai.module';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { ExpressAdapter } from '@bull-board/express';
 

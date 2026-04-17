@@ -5,8 +5,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ProductDocument, Products } from './schema/product.schema';
 import { Model, Types } from 'mongoose';
 import { UsersService } from 'src/modules/users/users.service';
-import { AiService } from 'src/ai/ai.service';
-import { productsDescriptionPrompt } from 'src/ai/constants/prompt';
+import { AiService } from 'src/modules/ai/ai.service';
+import { productsDescriptionPrompt } from 'src/modules/products/ai/prompt';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 

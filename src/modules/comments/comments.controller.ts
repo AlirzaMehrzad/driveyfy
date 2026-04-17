@@ -13,12 +13,15 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Types } from 'mongoose';
 import { GetCommentsDto } from './dto/get-comments.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Controller('comments')
 export class CommentsController {
-  constructor(private readonly commentsService: CommentsService) {}
+  constructor(private readonly commentsService: CommentsService) { }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   create(@Body() createCommentDto: CreateCommentDto) {
     return this.commentsService.createComment(createCommentDto);
   }

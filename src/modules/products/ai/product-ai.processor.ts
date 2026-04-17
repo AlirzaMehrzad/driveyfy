@@ -5,8 +5,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Products, ProductDocument } from 'src/modules/products/schema/product.schema';
-import { AiService } from 'src/ai/ai.service';
-import { productsDescriptionPrompt } from 'src/ai/constants/prompt';
+import { AiService } from 'src/modules/ai/ai.service';
+import { productsDescriptionPrompt } from 'src/modules/products/ai/prompt';
 
 @Processor('products-queue')
 @Injectable()

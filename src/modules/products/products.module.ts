@@ -4,7 +4,7 @@ import { ProductsController } from './products.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Products, ProductSchema } from './schema/product.schema';
 import { UsersModule } from 'src/modules/users/users.module';
-import { AiModule } from 'src/ai/ai.module';
+import { AiModule } from 'src/modules/ai/ai.module';
 import { BullModule } from '@nestjs/bull';
 import { ProductAiProcessor } from './ai/product-ai.processor';
 import { BullAdapter } from '@bull-board/api/bullAdapter';

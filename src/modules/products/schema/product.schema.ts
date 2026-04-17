@@ -27,6 +27,12 @@ export class Products {
   @Prop({ type: Types.ObjectId, ref: Users.name, required: true })
   owner: Types.ObjectId;
 
+  @Prop({ type: String, default: null })
+  summary: string;
+
+  @Prop({ type: Date, default: null })
+  summaryUpdatedAt: Date;
+
   @Prop({ ref: Users.name, type: Types.ObjectId })
   deleted: {
     status: { type: Boolean; default: false };

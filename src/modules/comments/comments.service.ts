@@ -5,25 +5,30 @@ import { UsersService } from '../users/users.service';
 import { CommentDocument, Comments } from './schema/comment.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 @Injectable()
 export class CommentsService {
   constructor(
+    @InjectQueue('comments-queue')
+    private readonly commentsQueue: Queue,
     @InjectModel(Comments.name)
     private readonly commentModel: Model<CommentDocument>,
     @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
-  ) {}
+  ) { }
 
   createComment = async (createCommentDto: CreateCommentDto) => {
     const comment = await this.commentModel.create(createCommentDto);
     if (!comment)
-      return { success: false, status: 400, message: 'دیدگاه شما ایجاد نشد' };
+      return { success: false, status: 400, message: 'Comment not created' };
 
+    await this.commentsQueue.add('summarize-comments', { productId: createCommentDto.productRef });
     return {
       success: true,
       status: 200,
-      message: 'دیدگاه شما ایجاد شد و در انتظار تایید است',
+      message: 'Comment created and waiting for admin approval',
     };
   };
 
