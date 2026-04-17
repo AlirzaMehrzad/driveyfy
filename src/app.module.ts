@@ -11,6 +11,8 @@ import { AllExceptionsFilter } from './common/filters/all_exception.filter';
 import { BullModule } from '@nestjs/bull';
 import { AdminModule } from './modules/admin/admin.module';
 import { AiModule } from './ai/ai.module';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { ExpressAdapter } from '@bull-board/express';
 
 @Module({
   imports: [
@@ -28,6 +30,12 @@ import { AiModule } from './ai/ai.module';
         host: 'localhost',
         port: 6379,
       },
+    }),
+
+    // 2. Initialize the Bull Board UI
+    BullBoardModule.forRoot({
+      route: '/admin/queues', // This is the URL where you will see the dashboard
+      adapter: ExpressAdapter, // Using Express to serve the UI
     }),
     AiModule,
   ],

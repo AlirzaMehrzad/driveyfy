@@ -25,10 +25,7 @@ export class CreateProductDto {
   readonly price: number;
 
   @IsString()
-  @IsNotEmpty()
-  @MinLength(10)
-  @MaxLength(250)
-  @IsNotEmpty()
+  @IsOptional()
   description: string;
 
   @IsOptional()
