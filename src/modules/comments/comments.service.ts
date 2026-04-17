@@ -7,10 +7,13 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { Products, ProductDocument } from '../products/schema/product.schema';
 
 @Injectable()
 export class CommentsService {
   constructor(
+    @InjectModel(Products.name)
+    private readonly productModel: Model<ProductDocument>,
     @InjectQueue('comments-queue')
     private readonly commentsQueue: Queue,
     @InjectModel(Comments.name)
@@ -24,7 +27,20 @@ export class CommentsService {
     if (!comment)
       return { success: false, status: 400, message: 'Comment not created' };
 
-    await this.commentsQueue.add('summarize-comments', { productId: createCommentDto.productRef });
+    // Comment summarization
+    const product = await this.productModel.findById(createCommentDto.productRef);
+    if (product) {
+      const currentCount = product.numberOfUnGeneratedComments || 0;
+      if (currentCount < 4) { // every 5 comments, we generate a summary
+        product.numberOfUnGeneratedComments = currentCount + 1;
+        await product.save();
+      } else {
+        product.numberOfUnGeneratedComments = 0;
+        await product.save();
+        await this.commentsQueue.add('summarize-comments', { productId: createCommentDto.productRef });
+      }
+    }
+
     return {
       success: true,
       status: 200,

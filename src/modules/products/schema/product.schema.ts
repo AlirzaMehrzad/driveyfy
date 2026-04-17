@@ -33,6 +33,9 @@ export class Products {
   @Prop({ type: Date, default: null })
   summaryUpdatedAt: Date;
 
+  @Prop({ type: Number, default: 0 })
+  numberOfUnGeneratedComments: number;
+
   @Prop({ ref: Users.name, type: Types.ObjectId })
   deleted: {
     status: { type: Boolean; default: false };
