@@ -6,7 +6,7 @@ A high-performance, asynchronous NestJS backend that automatically generates AI-
 
 * **⚡ Lightning Fast API:** Returns instant responses to the client by offloading heavy AI generation to background workers.
 * **🧠 Local AI Integration:** Uses [Ollama](https://ollama.com/) to run models like Llama 3 locally. 100% free, zero API costs, and total data privacy.
-* ** صف Queue Management:** Robust background job processing using **BullMQ** and Redis. Includes auto-retries and concurrency control.
+* ** Queue Management:** Robust background job processing using **BullMQ** and Redis. Includes auto-retries and concurrency control.
 * **📊 Visual Dashboard:** Built-in **Bull Board** UI to monitor queues, active jobs, and AI generation times in real-time.
 * **📦 Database:** Fully integrated with **MongoDB** (via Mongoose) to seamlessly update documents once the AI finishes processing.
 
