@@ -43,7 +43,7 @@ export class CommentAiProcessor {
             // 3. Craft the AI Prompt
             const prompt = commentsRecapPrompt(commentsText);
             // 4. Call local Ollama model (Takes ~1-2 seconds)
-            const aiSummary = await this.aiService.generateWithOllama(prompt);
+            const aiSummary = await this.aiService.generateWithDeepSeek(prompt);
             // 5. Update the Product document with the new AI summary
             await this.productModel.findByIdAndUpdate(
                 productId,
