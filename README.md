@@ -35,6 +35,8 @@ Before running this project, ensure you have the following installed on your mac
 **Pull your preferred AI model via terminal:**
 ```bash
 ollama run llama3
+```
+
 ```bash
 ollama run deepseek-r1
 
