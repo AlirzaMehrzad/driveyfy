@@ -7,22 +7,20 @@ import { Model, Types } from 'mongoose';
 import { UsersService } from 'src/modules/users/users.service';
 import { AiService } from 'src/ai/ai.service';
 import { productsDescriptionPrompt } from 'src/ai/constants/prompt';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 @Injectable()
 export class ProductsService {
   constructor(
     private readonly aiService: AiService,
+    @InjectQueue('products-queue') private productsQueue: Queue,
     @InjectModel(Products.name) private productModel: Model<ProductDocument>,
     @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
   ) { }
 
   createProduct = async (req, createProductDto: CreateProductDto) => {
-    const prompt = await productsDescriptionPrompt(createProductDto.title);
-    const aiGeneratedDescription = await this.aiService.generateWithOllama(prompt);
-    console.log(aiGeneratedDescription);
-
-    createProductDto.description = aiGeneratedDescription;
     const userId = new Types.ObjectId(req.user.id);
     const product = await this.productModel.create({
       ...createProductDto,
@@ -30,6 +28,12 @@ export class ProductsService {
     });
     if (!product)
       throw new HttpException('مشکلی در ایجاد محصول بهوجود آمد', 400);
+
+    // Update AI generated description in background
+    await this.productsQueue.add('generate-description', {
+      productId: product.id,
+      productName: product.title,
+    });
 
     return product;
   };
