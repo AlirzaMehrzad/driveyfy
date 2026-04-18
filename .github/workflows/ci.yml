@@ -3,9 +3,9 @@ name: Project Quality Control (CI)
 # 1. THE TRIGGER: When does this pipeline run?
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "main" ] # Also runs if you create a PR to merge into main
+    branches: [ "master" ] # Also runs if you create a PR to merge into main
 
 jobs:
   # JOB 1: Test the NestJS Code
