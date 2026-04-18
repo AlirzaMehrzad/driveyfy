@@ -27,6 +27,7 @@ export class CommentsService {
     if (!comment)
       return { success: false, status: 400, message: 'Comment not created' };
 
+    await this.commentsQueue.add('check-comment', { commentId: comment._id, commentText: createCommentDto.text });
     // Comment summarization
     const product = await this.productModel.findById(createCommentDto.productRef);
     if (product) {

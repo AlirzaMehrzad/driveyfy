@@ -7,7 +7,7 @@ import { Model } from 'mongoose';
 import { Comments, CommentDocument } from '../schema/comment.schema';
 import { Products, ProductDocument } from '../../products/schema/product.schema';
 import { AiService } from 'src/modules/ai/ai.service';
-import { commentsRecapPrompt } from './prompt';
+import { commentsRecapPrompt, checkCommentPrompt } from './prompt';
 
 @Processor('comments-queue')
 @Injectable()
@@ -61,6 +61,24 @@ export class CommentAiProcessor {
         } catch (error) {
             this.logger.error(`Failed to summarize comments for product ${productId}`, error);
             throw error; // Let BullMQ retry the job if it fails
+        }
+    }
+
+    @Process('check-comment')
+    async checkComment(job: Job<any>): Promise<any> {
+        const { commentId, commentText } = job.data;
+        try {
+            this.logger.log(`Checking comment...: ${commentId}`);
+            const prompt = await checkCommentPrompt(commentText);
+            const aiResponse = await this.aiService.generateWithDeepSeek(prompt);
+            if (aiResponse.toLowerCase() === 'false') {
+                await this.commentModel.findByIdAndUpdate(commentId, { admittedByAi: true }).exec();
+            }
+            this.logger.log(`Successfully updated comment status ${commentId}`);
+            return { success: true };
+        } catch (error) {
+            this.logger.error(`Failed to check comment ${commentId}`, error);
+            throw error;
         }
     }
 }

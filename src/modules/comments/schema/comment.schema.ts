@@ -17,7 +17,10 @@ export class Comments {
   productRef: Types.ObjectId;
 
   @Prop({ default: false })
-  admitted: boolean;
+  admittedByAdmin: boolean;
+
+  @Prop({ default: false })
+  admittedByAi: boolean;
 
   @Prop({ default: 0 })
   likesCount: number;
