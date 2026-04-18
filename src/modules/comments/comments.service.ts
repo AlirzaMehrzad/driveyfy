@@ -52,13 +52,15 @@ export class CommentsService {
   findAllComments = async (getCommentsDto) => {
     const allUserComments = await this.commentModel.find({
       userRef: getCommentsDto.userId,
+      admittedByAi: true,
     });
     const allProductComments = await this.commentModel.find({
-      userRef: getCommentsDto.productId,
+      productRef: getCommentsDto.productId,
+      admittedByAi: true,
     });
     return {
       success: true,
-      message: 'کامنت ها پیدا شد',
+      message: 'Comments found successfully',
       allUserComments,
       allProductComments,
     };

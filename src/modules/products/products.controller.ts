@@ -41,7 +41,7 @@ export class ProductsController {
   @UseGuards(JwtAuthGuard)
   async findAll(@Query('q') query) {
     if (query) {
-      const results = await this.productsService.semanticSearch(query);
+      const results = await this.productsService.hybridSearch(query);
       return {
         status: 200,
         message: 'Search results received successfully',

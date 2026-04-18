@@ -107,20 +107,69 @@ export class ProductsService {
     return true;
   };
 
-  semanticSearch = async (searchQuery: string) => {
-    const queryVector = await this.aiService.generateEmbedding(searchQuery);
-    const products = await this.productModel.find({ embedding: { $exists: true } }).select('+embedding').exec();
-    const scoredProducts = products.map((product) => {
-      const score = this.calculateCosineSimilarity(queryVector, product.embedding);
+  hybridSearch = async (searchQuery: string) => {
+    // ==========================================
+    // 1. KEYWORD SEARCH (Find exact title matches)
+    // ==========================================
+    // We use $regex with option 'i' (case-insensitive) to find partial or exact title matches
+    const keywordMatches = await this.productModel
+      .find({ name: { $regex: searchQuery, $options: 'i' } })
+      .lean()
+      .exec();
+
+    // Map them and give them a manually high "score" since an exact title match is highly relevant
+    const formattedKeywordResults = keywordMatches.map(product => ({
+      _id: product._id.toString(),
+      name: product.title,
+      description: product.description,
+      score: 1.0, // Top priority
+      matchType: 'keyword' // Just to help us see how it was found
+    }));
+
+    // ==========================================
+    // 2. SEMANTIC SEARCH (Find conceptual matches)
+    // ==========================================
+    const queryVector = await this.aiService.generateEmbedding(`search_query: ${searchQuery}`);
+
+    const allProducts = await this.productModel
+      .find({ embedding: { $exists: true } })
+      .select('+embedding')
+      .lean()
+      .exec();
+
+    const semanticMatches = allProducts.map((product) => {
       return {
-        _id: product._id,
+        _id: product._id.toString(),
         name: product.title,
         description: product.description,
-        score: score,
+        score: this.calculateCosineSimilarity(queryVector, product.embedding),
+        matchType: 'semantic'
       };
     });
-    scoredProducts.sort((a, b) => b.score - a.score);
-    return scoredProducts.slice(0, 5);
+
+    // Sort semantic matches by highest score and grab the top 5
+    semanticMatches.sort((a, b) => b.score - a.score);
+    const topSemanticResults = semanticMatches.slice(0, 5);
+
+    // ==========================================
+    // 3. COMBINE AND DEDUPLICATE
+    // ==========================================
+    // We want the keyword matches at the top, followed by the semantic matches.
+    const combinedResults = [...formattedKeywordResults, ...topSemanticResults];
+
+    // Remove duplicates (in case a product was found by BOTH the title and the semantic search)
+    const uniqueResults: any[] = [];
+    const seenIds = new Set();
+
+    for (const result of combinedResults) {
+      if (!seenIds.has(result._id)) {
+        seenIds.add(result._id);
+        uniqueResults.push(result);
+      }
+    }
+
+    // Return the top 5 overall unique results
+    return uniqueResults.slice(0, 5);
   }
 
 }
