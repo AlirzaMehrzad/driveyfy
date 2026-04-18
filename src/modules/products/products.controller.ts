@@ -39,7 +39,15 @@ export class ProductsController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async findAll(@Query() query) {
+  async findAll(@Query('q') query) {
+    if (query) {
+      const results = await this.productsService.semanticSearch(query);
+      return {
+        status: 200,
+        message: 'Search results received successfully',
+        data: results,
+      };
+    }
     const products = await this.productsService.findAllProducts(query);
     return {
       status: 200,

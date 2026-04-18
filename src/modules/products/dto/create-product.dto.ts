@@ -12,7 +12,7 @@ import {
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
-  @MaxLength(35)
+  @MaxLength(100)
   readonly title: string;
 
   @IsString()

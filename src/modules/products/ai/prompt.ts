@@ -6,6 +6,7 @@ export const productsDescriptionPrompt = async (productName: string) => {
       Avoid using generic phrases and focus on what makes this product unique and appealing to potential customers.
       The description should be written in a way that captures the attention of potential customers and encourages them to learn more about the product.
       Please provide the description in a clear and compelling manner, using language that resonates with the target audience.
-      dont say anything else except the description.
-      dont use quotes.`;
+      DONT SAY ANYTHING ELSE EXCEPT THE DESCRIPTION.
+
+      DONT USE QUOTES.`;
 };

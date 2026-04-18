@@ -26,12 +26,17 @@ export class ProductAiProcessor {
       const prompt = await productsDescriptionPrompt(productName);
 
       const generatedText = await this.aiService.generateWithOllama(prompt);
+
+      const textToEmbed = `search_document: ${productName}. ${generatedText}`;
+      const vectorEmbedding = await this.aiService.generateEmbedding(textToEmbed);
+
       // Update MongoDB
       await this.productModel.findByIdAndUpdate(
         productId,
         {
           $set: {
             description: generatedText,
+            embedding: vectorEmbedding,
             status: 'completed'
           }
         }
@@ -45,4 +50,5 @@ export class ProductAiProcessor {
       throw error;
     }
   }
+
 }

@@ -36,6 +36,9 @@ export class Products {
   @Prop({ type: Number, default: 0 })
   numberOfUnGeneratedComments: number;
 
+  @Prop({ type: [Number], default: [], select: false })
+  embedding: number[];
+
   @Prop({ ref: Users.name, type: Types.ObjectId })
   deleted: {
     status: { type: Boolean; default: false };
