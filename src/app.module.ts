@@ -13,6 +13,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { AiModule } from './modules/ai/ai.module';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { ExpressAdapter } from '@bull-board/express';
+import { CartModule } from './modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ExpressAdapter } from '@bull-board/express';
       adapter: ExpressAdapter, // Using Express to serve the UI
     }),
     AiModule,
+    CartModule,
   ],
   providers: [
     {
